@@ -1,13 +1,14 @@
 package cz.eg.hr.service;
 
-import cz.eg.hr.data.JavascriptFramework;
+import cz.eg.hr.model.dto.JavascriptFrameworkRequestDto;
+import cz.eg.hr.model.dto.JavascriptFrameworkResponseDto;
 
 import java.util.Optional;
 
 public interface JavascriptFrameworkService {
-    Iterable<JavascriptFramework> findAll();
-    Optional<JavascriptFramework> findById(Long id);
-    JavascriptFramework save(JavascriptFramework javascriptFramework);
+    Iterable<JavascriptFrameworkResponseDto> findAll();
+    Optional<JavascriptFrameworkResponseDto> findById(Long id);
+    JavascriptFrameworkResponseDto save(JavascriptFrameworkRequestDto requestDto);
     void delete(Long id);
-    Iterable<JavascriptFramework> findAllByNameContainingIgnoreCase(String name);
+    Iterable<JavascriptFrameworkResponseDto> findAllByNameContainingIgnoreCase(String name);
 }
