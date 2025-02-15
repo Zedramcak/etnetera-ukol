@@ -1,12 +1,23 @@
 package cz.eg.hr.data;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class JavascriptFramework {
 
     @Id
@@ -15,33 +26,5 @@ public class JavascriptFramework {
 
     @Column(nullable = false, length = 30)
     private String name;
-
-    public JavascriptFramework() {
-    }
-
-    public JavascriptFramework(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "JavaScriptFramework [id=" + id + ", name=" + name + "]";
-    }
 
 }
