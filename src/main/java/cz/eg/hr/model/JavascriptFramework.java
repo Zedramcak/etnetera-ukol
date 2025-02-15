@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity
-@Table(name = "javascript_framework", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "version"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name", "version"}))
 public class JavascriptFramework {
 
     @Id
