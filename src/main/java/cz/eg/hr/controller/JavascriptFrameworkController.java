@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/frameworks")
+@RequestMapping(ApiConstants.API_FRAMEWORKS)
 @RequiredArgsConstructor
 @Tag(name = "Javascript Frameworks", description = "CRUD operations for Javascript Frameworks")
 public class JavascriptFrameworkController {
@@ -30,7 +30,7 @@ public class JavascriptFrameworkController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ApiConstants.API_FRAMEWORKS_ID)
     public ResponseEntity<JavascriptFramework> findById(
         @Parameter(description = "Framework ID", example = "1") @PathVariable Long id
     ) {
@@ -43,12 +43,12 @@ public class JavascriptFrameworkController {
         return ResponseEntity.ok(service.save(javascriptFramework));
     }
 
-    @GetMapping("/search")
+    @GetMapping(ApiConstants.API_FRAMEWORKS_SEARCH)
     public ResponseEntity<Iterable<JavascriptFramework>> findByName(@RequestParam String name) {
         return ResponseEntity.ok(service.findAllByNameContainingIgnoreCase(name));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(ApiConstants.API_FRAMEWORKS_DELETE + ApiConstants.API_FRAMEWORKS_ID)
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
