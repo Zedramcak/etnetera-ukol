@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkService {
     private final JavascriptFrameworkRepository repository;
+    private final JavascriptFrameworkMapper mapper = JavascriptFrameworkMapper.INSTANCE;
 
     public JavascriptFrameworkServiceImpl(JavascriptFrameworkRepository repository) {
         this.repository = repository;
@@ -22,21 +25,20 @@ public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkServic
     @Override
     public Iterable<JavascriptFrameworkResponseDto> findAll() {
         Iterable<JavascriptFramework> frameworks =  repository.findAll();
-        frameworks.forEach(System.out::println);
-        return List.of();
+        return mapFrameworksToDto(frameworks);
 
     }
 
     @Override
     public Optional<JavascriptFrameworkResponseDto> findById(Long id) {
-        return repository.findById(id).map(JavascriptFrameworkMapper.INSTANCE::toDTO);
+        return repository.findById(id).map(mapper::toDTO);
     }
 
     @Override
     public JavascriptFrameworkResponseDto save(JavascriptFrameworkRequestDto requestDto) {
-        JavascriptFramework javascriptFramework = JavascriptFrameworkMapper.INSTANCE.toEntity(requestDto);
+        JavascriptFramework javascriptFramework = mapper.toEntity(requestDto);
 
-        return JavascriptFrameworkMapper.INSTANCE.toDTO(repository.save(javascriptFramework));
+        return mapper.toDTO(repository.save(javascriptFramework));
     }
 
     @Override
@@ -50,6 +52,24 @@ public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkServic
 
     @Override
     public Iterable<JavascriptFrameworkResponseDto> findAllByNameContainingIgnoreCase(String name) {
-        return List.of();
+        Iterable<JavascriptFramework> frameworks = repository.findAllByNameContainingIgnoreCase(name);
+        return mapFrameworksToDto(frameworks);
+    }
+
+    @Override
+    public JavascriptFrameworkResponseDto update(Long id, JavascriptFrameworkRequestDto requestDto) {
+        Optional<JavascriptFramework> javascriptFramework = repository.findById(id);
+        if (javascriptFramework.isEmpty()) {
+            throw new IllegalArgumentException("No such framework with id " + id);
+        }
+        JavascriptFramework updatedFramework = mapper.toEntity(requestDto);
+        updatedFramework.setId(id);
+        return mapper.toDTO(repository.save(updatedFramework));
+    }
+
+    private List<JavascriptFrameworkResponseDto> mapFrameworksToDto(Iterable<JavascriptFramework> frameworks) {
+        return StreamSupport.stream(frameworks.spliterator(), false)
+            .map(mapper::toDTO)
+            .collect(Collectors.toList());
     }
 }

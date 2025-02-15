@@ -2,6 +2,7 @@ package cz.eg.hr.controller;
 
 import cz.eg.hr.rest.Errors;
 import cz.eg.hr.rest.ValidationError;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,5 +23,12 @@ public class GeneralControllerAdvice {
 
         return ResponseEntity.badRequest().body(new Errors(errorList));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Errors> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(409).body(new Errors(List.of(new ValidationError("dataIntegrityViolation", ex.getMessage()))));
+    }
+
+
 
 }

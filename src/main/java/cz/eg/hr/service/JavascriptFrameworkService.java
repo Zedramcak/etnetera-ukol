@@ -10,5 +10,6 @@ public interface JavascriptFrameworkService {
     Optional<JavascriptFrameworkResponseDto> findById(Long id);
     JavascriptFrameworkResponseDto save(JavascriptFrameworkRequestDto requestDto);
     void delete(Long id);
+    JavascriptFrameworkResponseDto update(Long id, JavascriptFrameworkRequestDto requestDto);
     Iterable<JavascriptFrameworkResponseDto> findAllByNameContainingIgnoreCase(String name);
 }

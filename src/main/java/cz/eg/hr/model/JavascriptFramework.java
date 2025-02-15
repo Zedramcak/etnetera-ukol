@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity
+@Table(name = "javascript_framework", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "version"}))
 public class JavascriptFramework {
 
     @Id
@@ -22,6 +25,7 @@ public class JavascriptFramework {
     @Column(nullable = false, length = 30)
     private String name;
 
+    @Column(nullable = false)
     private String version;
 
     private Integer rating;
