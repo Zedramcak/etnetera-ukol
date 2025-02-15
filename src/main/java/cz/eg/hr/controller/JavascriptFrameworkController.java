@@ -1,7 +1,7 @@
 package cz.eg.hr.controller;
 
-import cz.eg.hr.model.dto.JavascriptFrameworkRequestDto;
-import cz.eg.hr.model.dto.JavascriptFrameworkResponseDto;
+import cz.eg.hr.model.dto.JavascriptFrameworkRequestDTO;
+import cz.eg.hr.model.dto.JavascriptFrameworkResponseDTO;
 import cz.eg.hr.service.JavascriptFrameworkService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,11 +39,11 @@ public class JavascriptFrameworkController {
         description = "list of frameworks",
         content = @Content(
             array = @ArraySchema(
-                schema = @Schema(implementation = JavascriptFrameworkResponseDto.class)
+                schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class)
             )
         )
     )
-    public ResponseEntity<Iterable<JavascriptFrameworkResponseDto>> findAll() {
+    public ResponseEntity<Iterable<JavascriptFrameworkResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -51,13 +51,13 @@ public class JavascriptFrameworkController {
     @ApiResponse(
         responseCode = "200",
         description = "found framework",
-        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDto.class))
+        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class))
     )
     @ApiResponse(responseCode = "404", description = "framework not found" , content = @Content)
-    public ResponseEntity<JavascriptFrameworkResponseDto> findById(
+    public ResponseEntity<JavascriptFrameworkResponseDTO> findById(
         @Parameter(description = "Framework ID", example = "1") @PathVariable Long id
     ) {
-        Optional<JavascriptFrameworkResponseDto> framework = service.findById(id);
+        Optional<JavascriptFrameworkResponseDTO> framework = service.findById(id);
         return framework.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -65,14 +65,13 @@ public class JavascriptFrameworkController {
     @ApiResponse(
         responseCode = "201",
         description = "framework created",
-        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDto.class))
+        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class))
     )
     @ApiResponse(responseCode = "400", description = "Invalid arguments" , content = @Content(schema = @Schema(implementation = MethodArgumentNotValidException.class)))
     @ApiResponse(responseCode = "409", description = "framework already exists" , content = @Content)
-    @ApiResponse(responseCode = "500", description = "internal server error" , content = @Content)
-    public ResponseEntity<JavascriptFrameworkResponseDto> save(@RequestBody @Valid JavascriptFrameworkRequestDto javascriptFrameworkRequest
+    public ResponseEntity<JavascriptFrameworkResponseDTO> save(@RequestBody @Valid JavascriptFrameworkRequestDTO javascriptFrameworkRequest
     ) {
-        JavascriptFrameworkResponseDto response = service.save(javascriptFrameworkRequest);
+        JavascriptFrameworkResponseDTO response = service.save(javascriptFrameworkRequest);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -82,12 +81,12 @@ public class JavascriptFrameworkController {
         description = "found frameworks",
         content = @Content(
             array = @ArraySchema(
-                schema = @Schema(implementation = JavascriptFrameworkResponseDto.class)
+                schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class)
             )
         )
     )
-    public ResponseEntity<Iterable<JavascriptFrameworkResponseDto>> findByName(@RequestParam String name) {
-        return ResponseEntity.ok(service.findAllByNameContainingIgnoreCase(name));
+    public ResponseEntity<Iterable<JavascriptFrameworkResponseDTO>> search(@RequestParam String search) {
+        return ResponseEntity.ok(service.findAllByNameOrVersion(search));
     }
 
     @DeleteMapping(ApiConstants.API_FRAMEWORKS_DELETE + ApiConstants.API_FRAMEWORKS_ID)
@@ -102,10 +101,11 @@ public class JavascriptFrameworkController {
     @ApiResponse(
         responseCode = "200",
         description = "updated framework",
-        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDto.class))
+        content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class))
     )
     @ApiResponse(responseCode = "404", description = "framework not found" , content = @Content)
-    public ResponseEntity<JavascriptFrameworkResponseDto> update(@Parameter(description = "Framework ID", example = "1") @PathVariable Long id, @RequestBody @Valid JavascriptFrameworkRequestDto javascriptFrameworkRequest) {
+    @ApiResponse(responseCode = "409", description = "framework already exists" , content = @Content)
+    public ResponseEntity<JavascriptFrameworkResponseDTO> update(@Parameter(description = "Framework ID", example = "1") @PathVariable Long id, @RequestBody @Valid JavascriptFrameworkRequestDTO javascriptFrameworkRequest) {
         return ResponseEntity.ok(service.update(id, javascriptFrameworkRequest));
     }
 

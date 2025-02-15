@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Schema
 @Data
-public class JavascriptFrameworkResponseDto {
+public class JavascriptFrameworkResponseDTO {
     @Schema(description = "Framework ID", example = "1")
     private Long id;
     @Schema(description = "Framework name")

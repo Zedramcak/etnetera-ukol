@@ -1,8 +1,8 @@
 package cz.eg.hr.mapper;
 
 import cz.eg.hr.model.JavascriptFramework;
-import cz.eg.hr.model.dto.JavascriptFrameworkRequestDto;
-import cz.eg.hr.model.dto.JavascriptFrameworkResponseDto;
+import cz.eg.hr.model.dto.JavascriptFrameworkRequestDTO;
+import cz.eg.hr.model.dto.JavascriptFrameworkResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface JavascriptFrameworkMapper {
     JavascriptFrameworkMapper INSTANCE = Mappers.getMapper(JavascriptFrameworkMapper.class);
 
-    JavascriptFramework toEntity(JavascriptFrameworkRequestDto dto);
+    JavascriptFramework toEntity(JavascriptFrameworkRequestDTO dto);
 
-    JavascriptFrameworkResponseDto toDTO(JavascriptFramework entity);
+    JavascriptFrameworkResponseDTO toDTO(JavascriptFramework entity);
 }

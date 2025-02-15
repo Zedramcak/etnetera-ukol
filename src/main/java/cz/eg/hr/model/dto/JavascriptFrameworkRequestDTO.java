@@ -4,20 +4,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Schema
 @Data
-public class JavascriptFrameworkRequestDto {
+public class JavascriptFrameworkRequestDTO {
     @NotBlank
+    @NotNull
     @Schema(
         description = "Framework name",
         example = "React"
     )
     private String name;
     @NotBlank
+    @NotNull
     @Schema(
         description = "Framework version",
         example = "1.0"
