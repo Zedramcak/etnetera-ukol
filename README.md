@@ -1,3 +1,19 @@
+# Dokumentace
+
+## Jak aplikaci spustit
+
+1. Otevřete terminál a přejděte do kořenového adresáře projektu.
+2. Pro sestavení aplikace spusťte následující příkaz:
+   ```bash
+   ./gradlew build
+   ```
+3. Pro spuštění aplikace použijte tento příkaz:
+   ```bash
+   ./gradlew bootRun
+   ```
+4. Po spuštění aplikace bude dostupná na adrese [http://localhost:8080](http://localhost:8080).
+5. Dokumentaci API naleznete na
+   adrese [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html).
 # České zadání
 
 Nevytvářejte fork tohoto repozitáře, ale místo toho [duplikujte toto úložiště](https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository). Pokud se přihlásíte na GitHub, můžete vytvořit repozitář ze šablony. Pokud se přihlásíte na GitHub, můžete [vytvořit repozitář ze šablony](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
