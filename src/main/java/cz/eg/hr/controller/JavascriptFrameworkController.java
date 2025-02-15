@@ -107,7 +107,7 @@ public class JavascriptFrameworkController {
         content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDto.class))
     )
     @ApiResponse(responseCode = "404", description = "framework not found" , content = @Content)
-    public ResponseEntity<JavascriptFrameworkResponseDto> update(@PathVariable Long id, @RequestBody @Valid JavascriptFrameworkRequestDto javascriptFrameworkRequest) {
+    public ResponseEntity<JavascriptFrameworkResponseDto> update(@Parameter(description = "Framework ID", example = "1") @PathVariable Long id, @RequestBody @Valid JavascriptFrameworkRequestDto javascriptFrameworkRequest) {
         return ResponseEntity.ok(service.update(id, javascriptFrameworkRequest));
     }
 
