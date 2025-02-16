@@ -108,9 +108,7 @@ class JavascriptFrameworkServiceImplTest {
         // Arrange
         when(repository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> {
-            service.findById(999L);
-        });
+        assertThrows(NoSuchElementException.class, () -> service.findById(999L));
 
     }
 
