@@ -32,13 +32,19 @@ public class JavascriptFramework {
 
     private LocalDate endOfSupport;
 
+    private LocalDate creationDate;
+
+    private LocalDate lastUpdate;
+
     public JavascriptFramework() {}
 
-    public JavascriptFramework(String name, String version, Integer rating, LocalDate endOfSupport) {
+    public JavascriptFramework(String name, String version, Integer rating, LocalDate endOfSupport, LocalDate creationDate, LocalDate lastUpdate) {
         this.name = name;
         this.version = version;
         this.rating = rating;
         this.endOfSupport = endOfSupport;
+        this.creationDate = creationDate;
+        this.lastUpdate = lastUpdate;
     }
 
     @Override

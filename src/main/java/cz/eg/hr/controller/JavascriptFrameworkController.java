@@ -57,8 +57,8 @@ public class JavascriptFrameworkController {
     public ResponseEntity<JavascriptFrameworkResponseDTO> findById(
         @Parameter(description = "Framework ID", example = "1") @PathVariable Long id
     ) {
-        Optional<JavascriptFrameworkResponseDTO> framework = service.findById(id);
-        return framework.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        JavascriptFrameworkResponseDTO framework = service.findById(id);
+        return ResponseEntity.ok(framework);
     }
 
     @PostMapping
@@ -67,7 +67,7 @@ public class JavascriptFrameworkController {
         description = "framework created",
         content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class))
     )
-    @ApiResponse(responseCode = "400", description = "Invalid arguments" , content = @Content(schema = @Schema(implementation = MethodArgumentNotValidException.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid arguments" , content = @Content)
     @ApiResponse(responseCode = "409", description = "framework already exists" , content = @Content)
     public ResponseEntity<JavascriptFrameworkResponseDTO> save(@RequestBody @Valid JavascriptFrameworkRequestDTO javascriptFrameworkRequest
     ) {
@@ -104,8 +104,11 @@ public class JavascriptFrameworkController {
         content = @Content(schema = @Schema(implementation = JavascriptFrameworkResponseDTO.class))
     )
     @ApiResponse(responseCode = "404", description = "framework not found" , content = @Content)
-    @ApiResponse(responseCode = "409", description = "framework already exists" , content = @Content)
-    public ResponseEntity<JavascriptFrameworkResponseDTO> update(@Parameter(description = "Framework ID", example = "1") @PathVariable Long id, @RequestBody @Valid JavascriptFrameworkRequestDTO javascriptFrameworkRequest) {
+    @ApiResponse(responseCode = "409", description = "framework with this name and version already exists" , content = @Content)
+    public ResponseEntity<JavascriptFrameworkResponseDTO> update(
+        @Parameter(description = "Framework ID", example = "1") @PathVariable Long id,
+        @RequestBody @Valid JavascriptFrameworkRequestDTO javascriptFrameworkRequest
+    ) {
         return ResponseEntity.ok(service.update(id, javascriptFrameworkRequest));
     }
 

@@ -8,7 +8,9 @@ import cz.eg.hr.repository.JavascriptFrameworkRepository;
 import cz.eg.hr.service.JavascriptFrameworkService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -30,14 +32,20 @@ public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkServic
     }
 
     @Override
-    public Optional<JavascriptFrameworkResponseDTO> findById(Long id) {
-        return repository.findById(id).map(mapper::toDTO);
+    public JavascriptFrameworkResponseDTO findById(Long id) {
+        Optional<JavascriptFramework> framework = repository.findById(id);
+        if (framework.isEmpty()) {
+            throw new NoSuchElementException("No such framework with id " + id);
+        }
+        return mapper.toDTO(framework.get());
     }
 
     @Override
     public JavascriptFrameworkResponseDTO save(JavascriptFrameworkRequestDTO requestDto) {
+        LocalDate now = LocalDate.now();
         JavascriptFramework javascriptFramework = mapper.toEntity(requestDto);
-
+        javascriptFramework.setCreationDate(now);
+        javascriptFramework.setLastUpdate(now);
         return mapper.toDTO(repository.save(javascriptFramework));
     }
 
@@ -45,7 +53,7 @@ public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkServic
     public void delete(Long id) {
         Optional<JavascriptFramework> javascriptFramework = repository.findById(id);
         if (javascriptFramework.isEmpty()) {
-            throw new IllegalArgumentException("No such framework with id " + id);
+            throw new NoSuchElementException("No such framework with id " + id);
         }
         repository.delete(javascriptFramework.get());
     }
@@ -60,10 +68,11 @@ public class JavascriptFrameworkServiceImpl implements JavascriptFrameworkServic
     public JavascriptFrameworkResponseDTO update(Long id, JavascriptFrameworkRequestDTO requestDto) {
         Optional<JavascriptFramework> javascriptFramework = repository.findById(id);
         if (javascriptFramework.isEmpty()) {
-            throw new IllegalArgumentException("No such framework with id " + id);
+            throw new NoSuchElementException("No such framework with id " + id);
         }
         JavascriptFramework updatedFramework = mapper.toEntity(requestDto);
         updatedFramework.setId(id);
+        updatedFramework.setLastUpdate(LocalDate.now());
         return mapper.toDTO(repository.save(updatedFramework));
     }
 

@@ -10,32 +10,32 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Schema
-@Data
-public class JavascriptFrameworkRequestDTO {
+public record JavascriptFrameworkRequestDTO (
     @NotBlank
     @NotNull
     @Schema(
         description = "Framework name",
         example = "React"
     )
-    private String name;
+    String name,
     @NotBlank
     @NotNull
     @Schema(
         description = "Framework version",
         example = "1.0"
     )
-    private String version;
+    String version,
     @Max(value = 5)
     @Min(value = 1)
     @Schema(
         description = "Framework rating",
         example = "1"
     )
-    private Integer rating;
+    Integer rating,
     @Schema(
         description = "Frameworks end of support",
         example = "2025-12-31"
     )
-    private LocalDate endOfSupport;
+    LocalDate endOfSupport
+){
 }

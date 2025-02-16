@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface JavascriptFrameworkService {
     Iterable<JavascriptFrameworkResponseDTO> findAll();
-    Optional<JavascriptFrameworkResponseDTO> findById(Long id);
+    JavascriptFrameworkResponseDTO findById(Long id);
     JavascriptFrameworkResponseDTO save(JavascriptFrameworkRequestDTO requestDto);
     void delete(Long id);
     JavascriptFrameworkResponseDTO update(Long id, JavascriptFrameworkRequestDTO requestDto);

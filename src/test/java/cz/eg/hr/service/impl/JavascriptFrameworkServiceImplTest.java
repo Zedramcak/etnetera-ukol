@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,18 +61,18 @@ class JavascriptFrameworkServiceImplTest {
         // Assert
         assertEquals(2, ((List<?>) result).size());
         JavascriptFrameworkResponseDTO dto1 = ((List<JavascriptFrameworkResponseDTO>) result).get(0);
-        assertEquals(1L, dto1.getId());
-        assertEquals("React", dto1.getName());
-        assertEquals("17.0.2", dto1.getVersion());
-        assertEquals(5, dto1.getRating());
-        assertEquals(LocalDate.of(2025, 12, 31), dto1.getEndOfSupport());
+        assertEquals(1L, dto1.id());
+        assertEquals("React", dto1.name());
+        assertEquals("17.0.2", dto1.version());
+        assertEquals(5, dto1.rating());
+        assertEquals(LocalDate.of(2025, 12, 31), dto1.endOfSupport());
 
         JavascriptFrameworkResponseDTO dto2 = ((List<JavascriptFrameworkResponseDTO>) result).get(1);
-        assertEquals(2L, dto2.getId());
-        assertEquals("Angular", dto2.getName());
-        assertEquals("12", dto2.getVersion());
-        assertEquals(4, dto2.getRating());
-        assertEquals(LocalDate.of(2024, 6, 30), dto2.getEndOfSupport());
+        assertEquals(2L, dto2.id());
+        assertEquals("Angular", dto2.name());
+        assertEquals("12", dto2.version());
+        assertEquals(4, dto2.rating());
+        assertEquals(LocalDate.of(2024, 6, 30), dto2.endOfSupport());
 
     }
 
@@ -89,43 +90,39 @@ class JavascriptFrameworkServiceImplTest {
         when(repository.findById(1L)).thenReturn(Optional.of(framework));
 
         // Act
-        Optional<JavascriptFrameworkResponseDTO> result = service.findById(1L);
+        JavascriptFrameworkResponseDTO result = service.findById(1L);
 
         // Verify
         verify(repository, times(1)).findById(1L);
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getId());
-        assertEquals("Vue.js", result.get().getName());
-        assertEquals("3.2", result.get().getVersion());
-        assertEquals(5, result.get().getRating());
-        assertEquals(LocalDate.of(2026, 10, 15), result.get().getEndOfSupport());
+        assertEquals(1L, result.id());
+        assertEquals("Vue.js", result.name());
+        assertEquals("3.2", result.version());
+        assertEquals(5, result.rating());
+        assertEquals(LocalDate.of(2026, 10, 15), result.endOfSupport());
     }
 
     @Test
-    void findById_ShouldReturnEmpty_WhenIdDoesNotExist() {
+    void findById_ShouldThrowIllegalArgumentException_WhenIdDoesNotExist() {
         // Arrange
         when(repository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act
-        Optional<JavascriptFrameworkResponseDTO> result = service.findById(999L);
+        assertThrows(NoSuchElementException.class, () -> {
+            service.findById(999L);
+        });
 
-        // Verify
-        verify(repository, times(1)).findById(999L);
-
-        // Assert
-        assertFalse(result.isPresent());
     }
 
     @Test
     void save_ShouldReturnSavedFramework() {
         // Arrange
-        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO();
-        requestDto.setName("React");
-        requestDto.setVersion("18.0");
-        requestDto.setRating(5);
-        requestDto.setEndOfSupport(LocalDate.of(2026, 12, 31));
+        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO(
+            "React",
+            "18.0",
+            5,
+            LocalDate.of(2026, 12, 31)
+        );
 
         JavascriptFramework framework = new JavascriptFramework();
         framework.setId(1L);
@@ -143,18 +140,22 @@ class JavascriptFrameworkServiceImplTest {
         verify(repository, times(1)).save(any(JavascriptFramework.class));
 
         // Assert
-        assertEquals(1L, result.getId());
-        assertEquals("React", result.getName());
-        assertEquals("18.0", result.getVersion());
-        assertEquals(5, result.getRating());
-        assertEquals(LocalDate.of(2026, 12, 31), result.getEndOfSupport());
+        assertEquals(1L, result.id());
+        assertEquals("React", result.name());
+        assertEquals("18.0", result.version());
+        assertEquals(5, result.rating());
+        assertEquals(LocalDate.of(2026, 12, 31), result.endOfSupport());
     }
 
     @Test
     void save_ShouldThrowException_WhenSavingFails() {
         // Arrange
-        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO();
-        requestDto.setName(null);  // Simulating invalid data
+        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO(
+            null,
+            null,
+            null,
+            null
+        );
 
         when(repository.save(any(JavascriptFramework.class))).thenThrow(new IllegalArgumentException("Invalid Framework Data"));
 
@@ -189,7 +190,7 @@ class JavascriptFrameworkServiceImplTest {
         when(repository.findById(999L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> service.delete(999L));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> service.delete(999L));
 
         // Verify
         verify(repository, times(1)).findById(999L);
@@ -204,11 +205,12 @@ class JavascriptFrameworkServiceImplTest {
     void update_ShouldReturnUpdatedFramework_WhenIdExists() {
         // Arrange
         Long id = 1L;
-        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO();
-        requestDto.setName("Updated React");
-        requestDto.setVersion("18.2");
-        requestDto.setRating(5);
-        requestDto.setEndOfSupport(LocalDate.of(2025, 12, 31));
+        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO(
+            "Updated React",
+            "18.2",
+            5,
+            LocalDate.of(2025, 12, 31)
+        );
 
         JavascriptFramework existingFramework = new JavascriptFramework();
         existingFramework.setId(id);
@@ -235,27 +237,28 @@ class JavascriptFrameworkServiceImplTest {
         verify(repository, times(1)).save(any(JavascriptFramework.class));
 
         // Assert
-        assertEquals(id, result.getId());
-        assertEquals("Updated React", result.getName());
-        assertEquals("18.2", result.getVersion());
-        assertEquals(5, result.getRating());
-        assertEquals(LocalDate.of(2025, 12, 31), result.getEndOfSupport());
+        assertEquals(id, result.id());
+        assertEquals("Updated React", result.name());
+        assertEquals("18.2", result.version());
+        assertEquals(5, result.rating());
+        assertEquals(LocalDate.of(2025, 12, 31), result.endOfSupport());
     }
 
     @Test
     void update_ShouldThrowException_WhenIdDoesNotExist() {
         // Arrange
         Long id = 999L;
-        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO();
-        requestDto.setName("Nonexistent");
-        requestDto.setVersion("1.0");
-        requestDto.setRating(3);
-        requestDto.setEndOfSupport(LocalDate.of(2023, 12, 31));
+        JavascriptFrameworkRequestDTO requestDto = new JavascriptFrameworkRequestDTO(
+            "Nonexistent",
+            "1.0",
+            3,
+            LocalDate.of(2023, 12, 31)
+        );
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> service.update(id, requestDto));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> service.update(id, requestDto));
 
         // Verify
         verify(repository, times(1)).findById(id);
@@ -297,11 +300,11 @@ class JavascriptFrameworkServiceImplTest {
         // Assert
         assertEquals(2, ((List<?>) result).size());
         JavascriptFrameworkResponseDTO dto1 = ((List<JavascriptFrameworkResponseDTO>) result).get(0);
-        assertEquals(1L, dto1.getId());
-        assertEquals("React", dto1.getName());
-        assertEquals("17.0.2", dto1.getVersion());
-        assertEquals(5, dto1.getRating());
-        assertEquals(LocalDate.of(2025, 12, 31), dto1.getEndOfSupport());
+        assertEquals(1L, dto1.id());
+        assertEquals("React", dto1.name());
+        assertEquals("17.0.2", dto1.version());
+        assertEquals(5, dto1.rating());
+        assertEquals(LocalDate.of(2025, 12, 31), dto1.endOfSupport());
     }
 
     @Test

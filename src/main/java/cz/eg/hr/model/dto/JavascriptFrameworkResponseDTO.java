@@ -7,16 +7,16 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Schema
-@Data
-public class JavascriptFrameworkResponseDTO {
+public record JavascriptFrameworkResponseDTO (
     @Schema(description = "Framework ID", example = "1")
-    private Long id;
+    Long id,
     @Schema(description = "Framework name")
-    private String name;
+    String name,
     @Schema(description = "Framework version")
-    private String version;
+    String version,
     @Schema(description = "Framework rating",  example = "1")
-    private Integer rating;
+    Integer rating,
     @Schema(description = "Frameworks end of support")
-    private LocalDate endOfSupport;
+    LocalDate endOfSupport
+){
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GeneralControllerAdvice {
@@ -29,6 +30,9 @@ public class GeneralControllerAdvice {
         return ResponseEntity.status(409).body(new Errors(List.of(new ValidationError("dataIntegrityViolation", ex.getMessage()))));
     }
 
-
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Errors> handleIllegalArgumentException(NoSuchElementException ex) {
+        return ResponseEntity.status(404).body(new Errors(List.of(new ValidationError("noSuchElementException", ex.getMessage()))));
+    }
 
 }

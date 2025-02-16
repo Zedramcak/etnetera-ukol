@@ -29,9 +29,15 @@ class JavascriptFrameworkControllerTest {
 
     @Test
     void findById_findsFramework() {
-        JavascriptFrameworkResponseDTO dto = new JavascriptFrameworkResponseDTO();
+        JavascriptFrameworkResponseDTO dto = new JavascriptFrameworkResponseDTO(
+            null,
+            null,
+            null,
+            null,
+            null
+        );
 
-        when(service.findById(anyLong())).thenReturn(Optional.of(dto));
+        when(service.findById(anyLong())).thenReturn(dto);
 
         ResponseEntity<JavascriptFrameworkResponseDTO> response = controller.findById(1L);
 
@@ -39,24 +45,21 @@ class JavascriptFrameworkControllerTest {
     }
 
     @Test
-    void findById_nothingFound() {
-        when(service.findById(anyLong())).thenReturn(Optional.empty());
-
-        ResponseEntity<JavascriptFrameworkResponseDTO> response = controller.findById(1L);
-
-        assertEquals(404, response.getStatusCodeValue());
-    }
-
-    @Test
     void save_savesFramework() {
-        JavascriptFrameworkRequestDTO dto = new JavascriptFrameworkRequestDTO();
-        dto.setName("Vue.js");
-        dto.setVersion("3.2");
+        JavascriptFrameworkRequestDTO dto = new JavascriptFrameworkRequestDTO(
+            "Vue.js",
+            "3.2",
+            null,
+            null
+        );
 
-        JavascriptFrameworkResponseDTO response = new JavascriptFrameworkResponseDTO();
-        response.setId(1L);
-        response.setName("Vue.js");
-        response.setVersion("3.2");
+        JavascriptFrameworkResponseDTO response = new JavascriptFrameworkResponseDTO(
+            1L,
+            "Vue.js",
+            "3.2",
+            null,
+            null
+        );
 
         when(service.save(dto)).thenReturn(response);
 
